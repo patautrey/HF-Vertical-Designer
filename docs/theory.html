@@ -1,1 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HF Vertical Designer – Theory of Operation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#020617;color:#e5e7eb;line-height:1.55;}
+header{padding:16px 20px;background:#0f172a;border-bottom:1px solid #1f2937;}
+h1{margin:0;font-size:1.45rem;}
+main{padding:22px;max-width:900px;margin:auto;}
+section{margin-bottom:34px;}
+h2{font-size:1.25rem;margin-bottom:8px;border-bottom:1px solid #1f2937;padding-bottom:4px;}
+h3{font-size:1.05rem;margin-top:14px;margin-bottom:6px;color:#93c5fd;}
+p{font-size:0.95rem;color:#cbd5e1;margin-bottom:10px;}
+ul{margin-top:6px;margin-bottom:10px;}
+li{margin-bottom:4px;}
+code{background:#1e293b;padding:2px 4px;border-radius:4px;font-size:0.85rem;color:#93c5fd;}
+.box{background:#0b1120;border:1px solid #1f2937;border-radius:6px;padding:12px;margin-top:10px;}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:0.9rem;}
+th,td{border:1px solid #1f2937;padding:6px 8px;text-align:left;}
+th{background:#0b1120;}
+a{color:#38bdf8;text-decoration:none;}
+a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Theory of Operation</h1>
+</header>
+
+<main>
+
+<section>
+  <p>
+    This page explains the RF theory behind the HF Vertical Designer.  
+    It covers impedance modeling, transformer behavior, coax transformation, SWR math, ERP estimation,  
+    and how height and ground conductivity shape radiation patterns.
+  </p>
+</section>
+
+<section>
+  <h2>1. Wavelength & Electrical Length</h2>
+  <p>
+    The foundation of all antenna modeling is wavelength:
+  </p>
+  <p>
+    <code>λ (meters) = 300 / frequency(MHz)</code>
+  </p>
+
+  <h3>1.1 Electrical Length of a Wire</h3>
+  <p>
+    Electrical length is the wire length expressed in wavelengths:
+  </p>
+  <p>
+    <code>Electrical Length = Wire Length / λ</code>
+  </p>
+
+  <ul>
+    <li>0.25 λ → quarter-wave</li>
+    <li>0.5 λ → half-wave (EFHW)</li>
+    <li>0.625 λ → 5/8-wave (low-angle DX)</li>
+    <li>1.0+ λ → long-wire behavior</li>
+  </ul>
+
+  <div class="box">
+    <strong>Key Insight:</strong>  
+    Electrical length determines impedance, radiation angle, and transformer requirements.
+  </div>
+</section>
+
+<section>
+  <h2>2. Feedpoint Impedance Modeling</h2>
+  <p>
+    Vertical antennas exhibit different impedances depending on electrical length:
+  </p>
+
+  <table>
+    <tr><th>Electrical Length</th><th>Typical Impedance</th><th>Notes</th></tr>
+    <tr><td>&lt; 0.2 λ</td><td>600–1500 Ω</td><td>Very short, inefficient</td></tr>
+    <tr><td>0.25 λ</td><td>30–70 Ω</td><td>Quarter-wave vertical</td></tr>
+    <tr><td>0.5 λ</td><td>2000–5000 Ω</td><td>EFHW</td></tr>
+    <tr><td>0.6–0.7 λ</td><td>100–300 Ω</td><td>5/8-wave DX geometry</td></tr>
+    <tr><td>1.0+ λ</td><td>300–1200 Ω</td><td>Random-wire behavior</td></tr>
+  </table>
+
+  <h3>2.1 Why Rybakov Lengths Work</h3>
+  <p>
+    They avoid resonance points, keeping impedance moderate and tunable.
+  </p>
+</section>
+
+<section>
+  <h2>3. Transformer / UNUN Theory</h2>
+  <p>
+    Transformers convert high impedance to something closer to 50 Ω.
+  </p>
+
+  <h3>3.1 Impedance Transformation</h3>
+  <p>
+    <code>Z_out = Z_in / (ratio²)</code>
+  </p>
+
+  <ul>
+    <li>49:1 → divides impedance by 2401</li>
+    <li>64:1 → divides impedance by 4096</li>
+    <li>9:1 → divides impedance by 81</li>
+    <li>4:1 → divides impedance by 16</li>
+  </ul>
+
+  <div class="box">
+    <strong>Example:</strong><br>
+    A 2500 Ω EFHW feedpoint becomes ~52 Ω through a 49:1 transformer.
+  </div>
+</section>
+
+<section>
+  <h2>4. Coax Transformation</h2>
+  <p>
+    Coax acts as an impedance transformer when its electrical length is significant.
+  </p>
+
+  <h3>4.1 Electrical Length of Coax</h3>
+  <p>
+    <code>Electrical Length = (Physical Length × VF) / λ</code>
+  </p>
+
+  <h3>4.2 Transformation Formula</h3>
+  <p>
+    <code>Z_in = Z0 × (Z_load + jZ0 tanβl) / (Z0 + jZ_load tanβl)</code>
+  </p>
+
+  <p>
+    The HF Vertical Designer uses a simplified model for speed,  
+    but the behavior is directionally accurate.
+  </p>
+</section>
+
+<section>
+  <h2>5. SWR Calculation</h2>
+  <p>
+    SWR is derived from the reflection coefficient:
+  </p>
+
+  <p>
+    <code>Γ = (Z - 50) / (Z + 50)</code><br>
+    <code>SWR = (1 + |Γ|) / (1 - |Γ|)</code>
+  </p>
+
+  <h3>5.1 With Tuner</h3>
+  <p>
+    A tuner reduces SWR at the radio, but not at the feedpoint.  
+    The tool assumes a modern ATU can reduce SWR to ~1.5:1.
+  </p>
+</section>
+
+<section>
+  <h2>6. ERP Modeling</h2>
+  <p>
+    ERP is computed from:
+  </p>
+  <ul>
+    <li>Transmitter power</li>
+    <li>Antenna gain (height + type)</li>
+    <li>Ground conductivity</li>
+    <li>Coax loss</li>
+    <li>SWR mismatch loss</li>
+  </ul>
+
+  <h3>6.1 Mismatch Loss</h3>
+  <p>
+    <code>Mismatch Loss (dB) = -10 log10(1 - |Γ|²)</code>
+  </p>
+
+  <h3>6.2 Height Gain</h3>
+  <p>
+    Higher antennas produce lower takeoff angles → more DX gain.
+  </p>
+
+  <h3>6.3 Saltwater Gain</h3>
+  <p>
+    Saltwater ground plane improves low-angle radiation by ~3 dB.
+  </p>
+
+  <div class="box">
+    <strong>Example:</strong><br>
+    A 25 ft Rybakov at 100 W near saltwater can produce ERP equivalent to 250–300 W inland.
+  </div>
+</section>
+
+<section>
+  <h2>7. Radiation Pattern Theory</h2>
+
+  <h3>7.1 Azimuth Pattern</h3>
+  <p>
+    Vertical antennas are omnidirectional in azimuth.
+  </p>
+
+  <h3>7.2 Elevation Pattern</h3>
+  <p>
+    Height and ground conductivity determine the takeoff angle.
+  </p>
+
+  <h3>7.3 Donut Projection</h3>
+  <p>
+    Represents the 3D radiation pattern flattened into 2D.
+  </p>
+</section>
+
+<section>
+  <h2>8. Navigation</h2>
+  <p>
+    Return to the main calculator:<br>
+    <a href="../index.html">HF Vertical Designer</a>
+  </p>
+</section>
+
+</main>
+</body>
+</html>
 
