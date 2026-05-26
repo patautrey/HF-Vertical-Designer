@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HF Vertical Designer – Quick Start Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#020617;color:#e5e7eb;line-height:1.5;}
+header{padding:14px 18px;background:#0f172a;border-bottom:1px solid #1f2937;}
+h1{margin:0;font-size:1.4rem;}
+main{padding:20px;max-width:900px;margin:auto;}
+section{margin-bottom:28px;}
+h2{font-size:1.2rem;margin-bottom:6px;border-bottom:1px solid #1f2937;padding-bottom:4px;}
+p{font-size:0.95rem;color:#cbd5e1;}
+.step{background:#0b1120;border:1px solid #1f2937;border-radius:6px;padding:12px;margin-bottom:14px;}
+code{background:#1e293b;padding:2px 4px;border-radius:4px;font-size:0.85rem;color:#93c5fd;}
+ul{margin-top:6px;margin-bottom:6px;}
+li{margin-bottom:4px;}
+a{color:#38bdf8;text-decoration:none;}
+a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+  <h1>HF Vertical Designer – Quick Start Guide</h1>
+</header>
+
+<main>
+
+<section>
+  <p>
+    This Quick Start Guide walks you through the fastest way to use the HF Vertical Designer.  
+    In just a few steps, you’ll be modeling vertical antennas, checking SWR across all HF bands,  
+    and estimating ERP for any configuration.
+  </p>
+</section>
+
+<section>
+  <h2>1. Enter Your Antenna Length</h2>
+  <div class="step">
+    <p>In the <strong>Antenna Geometry</strong> panel:</p>
+    <ul>
+      <li>Set <strong>Element length (ft)</strong> to the wire you plan to deploy.</li>
+      <li>Set <strong>Mast height</strong> to your support pole height.</li>
+      <li>Choose <strong>Foldover</strong> or <strong>Helical</strong> if the wire exceeds mast height.</li>
+      <li>Enable <strong>Counterpoise</strong> if using EFHW or random-wire systems.</li>
+    </ul>
+    <p>Examples:</p>
+    <ul>
+      <li>25 ft → Classic Rybakov</li>
+      <li>29 ft → Random-wire 9:1 vertical</li>
+      <li>33 ft → 20m EFHW</li>
+      <li>41 ft → 80–10m long vertical</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>2. Choose Transformer / UNUN</h2>
+  <div class="step">
+    <p>Select the matching transformer:</p>
+    <ul>
+      <li><strong>4:1</strong> → 17.5 ft, 20.5 ft, 25 ft Rybakov family</li>
+      <li><strong>9:1</strong> → 29 ft, 41 ft, helical 33 ft</li>
+      <li><strong>49:1</strong> → EFHW (20m, 40m)</li>
+      <li><strong>64:1</strong> → EFHW (15m optimal)</li>
+      <li><strong>1:1</strong> → Vertical dipoles / OCF vertical dipoles</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>3. Configure Feedline</h2>
+  <div class="step">
+    <p>Choose your feedline type and length:</p>
+    <ul>
+      <li><strong>LMR‑400</strong> → lowest loss</li>
+      <li><strong>RG‑213</strong> → field standard</li>
+      <li><strong>RG‑8X</strong> → portable-friendly</li>
+      <li><strong>RG‑58</strong> → ultralight, highest loss</li>
+      <li><strong>450Ω ladder line</strong> → doublets / OCF systems</li>
+    </ul>
+    <p>The calculator automatically computes coax loss and electrical length.</p>
+  </div>
+</section>
+
+<section>
+  <h2>4. Set Environment & Radials</h2>
+  <div class="step">
+    <p>Choose your operating environment:</p>
+    <ul>
+      <li><strong>Saltwater</strong> → +3 dB low-angle gain</li>
+      <li><strong>Good ground</strong> → +1 dB</li>
+      <li><strong>Inland soil</strong> → baseline</li>
+    </ul>
+    <p>Enter radial count and length if using a ground-mounted vertical.</p>
+  </div>
+</section>
+
+<section>
+  <h2>5. Press “Calculate Bands & ERP”</h2>
+  <div class="step">
+    <p>The results populate instantly:</p>
+    <ul>
+      <li><strong>Band Capability Table</strong> — usable, tuner-only, or not matchable</li>
+      <li><strong>SWR (no tuner)</strong> — raw feedpoint + transformer + coax</li>
+      <li><strong>SWR (with tuner)</strong> — estimated ATU-corrected SWR</li>
+      <li><strong>ERP</strong> — effective radiated power per band</li>
+      <li><strong>Geometry Summary</strong> — effective height, foldover, counterpoise</li>
+      <li><strong>Feedline Summary</strong> — loss, VF, electrical length</li>
+      <li><strong>Radiation Plots</strong> — azimuth, elevation, donut</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>6. Tips for Best Results</h2>
+  <div class="step">
+    <ul>
+      <li>Use <strong>25 ft</strong> or <strong>29 ft</strong> for broad multi-band performance.</li>
+      <li>Use <strong>33 ft EFHW</strong> for 20m DX dominance.</li>
+      <li>Use <strong>41 ft</strong> for 80m–10m coverage.</li>
+      <li>Deploy near <strong>saltwater</strong> whenever possible.</li>
+      <li>Use <strong>4–7 radials</strong> for Rybakov/random-wire systems.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>7. Navigation</h2>
+  <p>
+    Return to the main calculator:  
+    <br><a href="../index.html">HF Vertical Designer</a>
+  </p>
+</section>
+
+</main>
+</body>
+</html>
 
