@@ -1,4 +1,3 @@
-# HF-Vertical-Designer.html
 # HF Vertical Designer
 
 The **HF Vertical Designer** is a browser‑based modeling tool for portable and fixed HF vertical antennas.  
