@@ -12,7 +12,7 @@ HF-Vertical-Designer/
 │
 ├── index.html                     # Main calculator UI + engine
 │
-├── docs/                          # Documentation & reference
+├── docs/                          # Documentation &  reference
 │   ├── quickstart.html
 │   ├── user-manual.html
 │   ├── rybakov-guide.html
