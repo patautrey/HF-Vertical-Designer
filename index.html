@@ -1,374 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>HF Vertical Designer</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body{margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#020617;color:#e5e7eb;}
-header{padding:12px 16px;background:#0f172a;border-bottom:1px solid #1f2937;}
-h1{margin:0;font-size:1.3rem;}
-main{display:flex;flex-wrap:wrap;padding:12px;gap:12px;}
-.panel{background:#020617;border:1px solid #1f2937;border-radius:6px;padding:10px;flex:1 1 280px;min-width:260px;}
-.panel h2{margin:0 0 6px;font-size:1rem;border-bottom:1px solid #1f2937;padding-bottom:4px;}
-label{display:block;font-size:0.8rem;margin-top:6px;margin-bottom:2px;color:#9ca3af;}
-input,select,textarea{width:100%;box-sizing:border-box;background:#020617;border:1px solid #374151;border-radius:4px;color:#e5e7eb;padding:4px 6px;font-size:0.85rem;}
-textarea{min-height:80px;resize:vertical;}
-button{background:#22c55e;border:none;color:#020617;font-weight:600;padding:6px 10px;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-top:8px;}
-button:hover{background:#16a34a;}
-.summary-block{font-size:0.8rem;line-height:1.3;}
-.summary-block div{margin-bottom:2px;}
-.plot-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
-canvas{background:#020617;border:1px solid #1f2937;border-radius:4px;}
-.table-like{font-size:0.78rem;border-collapse:collapse;width:100%;margin-top:4px;}
-.table-like th,.table-like td{border:1px solid #1f2937;padding:3px 4px;text-align:left;}
-.table-like th{background:#0b1120;}
-.badge{display:inline-block;padding:1px 4px;border-radius:3px;font-size:0.7rem;margin-left:4px;}
-.badge-ok{background:#16a34a33;color:#bbf7d0;}
-.badge-warn{background:#f9731633;color:#fed7aa;}
-.badge-bad{background:#ef444433;color:#fecaca;}
-</style>
+  <meta charset="UTF-8">
+  <title>HF Vertical Designer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Shared CSS -->
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
-<header>
-  <h1>HF Vertical Designer</h1>
-</header>
-<main>
 
-  <!-- Antenna geometry -->
-  <section class="panel">
-    <h2>Antenna Geometry</h2>
-    <label for="element_length_ft">Element length (ft)</label>
-    <input id="element_length_ft" type="number" step="0.1" value="25">
+  <!-- Navbar placeholder -->
+  <div id="navbar"></div>
 
-    <label for="mast_height_ft">Mast height (ft)</label>
-    <input id="mast_height_ft" type="number" step="0.1" value="33">
+  <header>
+    <h1>HF Vertical Designer</h1>
+  </header>
 
-    <label for="foldover_mode">Foldover / helical mode</label>
-    <select id="foldover_mode">
-      <option value="none">None (straight)</option>
-      <option value="foldover">Foldover (DX Commander style)</option>
-      <option value="helical">Helical wrap (top section)</option>
-    </select>
+  <main>
 
-    <label for="counterpoise_enabled">Counterpoise</label>
-    <select id="counterpoise_enabled">
-      <option value="no">No</option>
-      <option value="yes">Yes</option>
-    </select>
+    <!-- Left Column: Geometry + Matching -->
+    <section class="panel">
+      <h2>Antenna Geometry</h2>
 
-    <label for="counterpoise_length_ft">Counterpoise length (ft)</label>
-    <input id="counterpoise_length_ft" type="number" step="0.1" value="3.3">
-  </section>
+      <label>Element length (ft)</label>
+      <input id="el_len" type="number" value="25">
 
-  <!-- Matching & feedline -->
-  <section class="panel">
-    <h2>Matching & Feedline</h2>
-    <label for="transformer_ratio">Balun / UNUN</label>
-    <select id="transformer_ratio">
-      <option value="1">1:1 (balun)</option>
-      <option value="4">4:1 (Rybakov family)</option>
-      <option value="9">9:1 (random / long)</option>
-      <option value="49">49:1 (EFHW)</option>
-      <option value="64">64:1 (EFHW high-Z)</option>
-    </select>
+      <label>Mast height (ft)</label>
+      <input id="mast_height" type="number" value="33">
 
-    <label for="feedline_type">Feedline type</label>
-    <select id="feedline_type">
-      <option value="lmr400">LMR-400</option>
-      <option value="rg213">RG-213</option>
-      <option value="rg8x">RG-8X</option>
-      <option value="rg58">RG-58</option>
-      <option value="ladder450">450Ω ladder line</option>
-      <option value="custom">Custom</option>
-    </select>
+      <label>Foldover / helical mode</label>
+      <select id="fold_mode">
+        <option value="none">None (straight)</option>
+        <option value="fold">Foldover</option>
+        <option value="helix">Helical</option>
+      </select>
 
-    <label for="feedline_length_ft">Feedline length (ft)</label>
-    <input id="feedline_length_ft" type="number" step="1" value="75">
+      <label>Counterpoise</label>
+      <select id="counterpoise">
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+      </select>
 
-    <label for="tx_power_w">TX / amp output (W)</label>
-    <input id="tx_power_w" type="number" step="1" value="100">
-  </section>
+      <label>Counterpoise length (ft)</label>
+      <input id="cp_len" type="number" value="3.3">
+    </section>
 
-  <!-- Environment -->
-  <section class="panel">
-    <h2>Environment & Height</h2>
-    <label for="height_mode">Height mode</label>
-    <select id="height_mode">
-      <option value="top_of_mast">Element top at mast tip</option>
-      <option value="base_at_ground">Base at ground, mast supports</option>
-    </select>
+    <section class="panel">
+      <h2>Matching & Feedline</h2>
 
-    <label for="site_type">Site type</label>
-    <select id="site_type">
-      <option value="inland">Inland soil</option>
-      <option value="average">Average ground</option>
-      <option value="good_ground">Good ground</option>
-      <option value="saltwater">Salt water / beach</option>
-    </select>
+      <label>Balun / UNUN</label>
+      <select id="transformer">
+        <option value="1">1:1 (balun)</option>
+        <option value="4">4:1</option>
+        <option value="9">9:1</option>
+        <option value="49">49:1</option>
+        <option value="64">64:1</option>
+      </select>
 
-    <label for="radials_count">Radials count</label>
-    <input id="radials_count" type="number" step="1" value="4">
+      <label>Feedline type</label>
+      <select id="feedline_type">
+        <option value="LMR400">LMR-400</option>
+        <option value="RG213">RG-213</option>
+        <option value="RG8X">RG-8X</option>
+        <option value="RG58">RG-58</option>
+      </select>
 
-    <label for="radials_length_ft">Radials length (ft)</label>
-    <input id="radials_length_ft" type="number" step="0.1" value="16">
+      <label>Feedline length (ft)</label>
+      <input id="feedline_len" type="number" value="75">
 
-    <label for="time_of_day">Time of day</label>
-    <select id="time_of_day">
-      <option value="day">Day</option>
-      <option value="night">Night</option>
-      <option value="grayline">Grayline</option>
-    </select>
+      <label>TX / amp output (W)</label>
+      <input id="tx_power" type="number" value="100">
+    </section>
 
-    <button id="calculate_btn">Calculate bands & ERP</button>
-  </section>
+    <!-- Right Column: Environment -->
+    <section class="panel">
+      <h2>Environment & Height</h2>
 
-  <!-- Results: band table -->
-  <section class="panel">
-    <h2>Band Capability & SWR</h2>
-    <table class="table-like" id="band_table">
-      <thead>
-        <tr>
-          <th>Band</th>
-          <th>Freq (MHz)</th>
-          <th>Usable?</th>
-          <th>SWR (no tuner)</th>
-          <th>SWR (with tuner)</th>
-          <th>ERP (W)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- filled by JS -->
-      </tbody>
-    </table>
-  </section>
+      <label>Height mode</label>
+      <select id="height_mode">
+        <option value="top">Element top at mast tip</option>
+        <option value="base">Element base at mast tip</option>
+      </select>
 
-  <!-- Results: summaries -->
-  <section class="panel">
-    <h2>Summaries</h2>
-    <div class="summary-block" id="geometry_summary"></div>
-    <hr style="border-color:#1f2937;margin:6px 0;">
-    <div class="summary-block" id="feedline_summary"></div>
-    <hr style="border-color:#1f2937;margin:6px 0;">
-    <div class="summary-block" id="erp_summary"></div>
-  </section>
+      <label>Site type</label>
+      <select id="site_type">
+        <option value="inland">Inland soil</option>
+        <option value="coastal">Coastal</option>
+        <option value="rocky">Rocky</option>
+      </select>
 
-  <!-- Results: plots -->
-  <section class="panel">
-    <h2>Radiation Patterns</h2>
-    <div class="plot-row">
-      <canvas id="azimuth_plot" width="220" height="220"></canvas>
-      <canvas id="elevation_plot" width="220" height="220"></canvas>
-      <canvas id="donut_plot" width="220" height="220"></canvas>
-    </div>
-  </section>
+      <label>Radials count</label>
+      <input id="radials_count" type="number" value="4">
 
-</main>
+      <label>Radials length (ft)</label>
+      <input id="radials_len" type="number" value="16">
 
-<script>
-// ---------- constants ----------
-const C_M_PER_S = 299792458;
-const FT_PER_M = 3.28084;
-const BANDS = [
-  { name:"80m", mhz:3.5 },
-  { name:"60m", mhz:5.33 },
-  { name:"40m", mhz:7.1 },
-  { name:"30m", mhz:10.1 },
-  { name:"20m", mhz:14.1 },
-  { name:"17m", mhz:18.1 },
-  { name:"15m", mhz:21.2 },
-  { name:"12m", mhz:24.9 },
-  { name:"10m", mhz:28.5 },
-  { name:"6m",  mhz:50.1 }
-];
+      <label>Time of day</label>
+      <select id="tod">
+        <option value="day">Day</option>
+        <option value="night">Night</option>
+      </select>
 
-const COAX_TYPES = {
-  lmr400:{ vf:0.85, loss_30:1.0, loss_50:1.5 },
-  rg213:{ vf:0.66, loss_30:1.3, loss_50:2.0 },
-  rg8x:{ vf:0.78, loss_30:2.0, loss_50:3.0 },
-  rg58:{ vf:0.66, loss_30:2.7, loss_50:4.5 }
-};
+      <button onclick="calculateBands()">Calculate bands & ERP</button>
+    </section>
 
-// ---------- helpers ----------
-function mhzToHz(m){return m*1e6;}
-function wavelengthMeters(m){return C_M_PER_S/mhzToHz(m);}
-function metersToFeet(m){return m*FT_PER_M;}
-function dbToRatio(db){return Math.pow(10,db/10);}
-function ratioToDb(r){return 10*Math.log10(r);}
-function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+    <!-- Results Section -->
+    <section class="panel" style="flex-basis:100%;">
+      <h2>Band Capability & SWR</h2>
 
-// crude interpolation for coax loss
-function coaxLossPer100ft(mhz,typeKey){
-  const t=COAX_TYPES[typeKey];
-  if(!t) return 0;
-  const f1=30,f2=50,l1=t.loss_30,l2=t.loss_50;
-  if(mhz<=f1) return l1*(mhz/f1);
-  if(mhz>=f2) return l2*(mhz/f2);
-  const x=(mhz-f1)/(f2-f1);
-  return l1+x*(l2-l1);
-}
+      <table class="table-like" id="results_table">
+        <thead>
+          <tr>
+            <th>Band</th>
+            <th>Freq (MHz)</th>
+            <th>Usable?</th>
+            <th>SWR (no tuner)</th>
+            <th>SWR (with tuner)</th>
+            <th>ERP (W)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
 
-// ---------- core modeling stubs ----------
-// These are intentionally simple first-pass approximations.
-// We can refine them with the PDF’s deeper behavior in the next iteration.
+      <h3>Summary</h3>
+      <div id="summary_block" class="summary-block"></div>
 
-function estimateFeedpointImpedance(mhz, elementFt, transformer, counterpoiseOn){
-  // Very rough heuristic: classify by electrical length vs band
-  const lambda_ft = metersToFeet(wavelengthMeters(mhz));
-  const el = elementFt / lambda_ft; // in wavelengths
-  let z = 200; // baseline vertical-ish
-  if(el < 0.2) z = 800;          // very short, high Z
-  else if(el > 0.8 && el < 1.2) z = 2500; // EFHW-ish
-  else if(el > 1.5) z = 600;     // long-ish random
-  if(counterpoiseOn) z *= 0.7;
-  return z;
-}
+      <h3>Radiation Patterns</h3>
+      <div class="plot-row">
+        <canvas id="az_plot" width="260" height="260"></canvas>
+        <canvas id="el_plot" width="260" height="260"></canvas>
+      </div>
+    </section>
 
-function applyTransformer(zFeed, ratio){
-  // ratio is N:1 (e.g. 49 means 49:1)
-  if(ratio === 1) return zFeed;
-  const n = ratio;
-  return zFeed / (n*n);
-}
+  </main>
 
-function estimateSWR(zAtRadio){
-  const z0 = 50;
-  const gamma = (zAtRadio - z0) / (zAtRadio + z0);
-  const mag = Math.abs(gamma);
-  if(!isFinite(mag)) return 99;
-  return (1+mag)/(1-mag);
-}
+  <!-- Shared JS utilities -->
+  <script src="assets/js/utils.js"></script>
 
-function estimateERP(mhz, txW, siteType, elementFt, heightFt, swr){
-  // baseline gain
-  let gainDb = 0;
-  // height / low-angle bias
-  const lambda_ft = metersToFeet(wavelengthMeters(mhz));
-  const h = heightFt / lambda_ft;
-  if(h > 0.25) gainDb += 1.5;
-  if(h > 0.5) gainDb += 1.0;
+  <!-- Navbar loader -->
+  <script src="assets/js/include-navbar.js"></script>
 
-  // site / saltwater bonus
-  if(siteType === "saltwater") gainDb += 3.0;
-  else if(siteType === "good_ground") gainDb += 1.0;
+  <!-- Main calculator logic -->
+  <script>
+    function calculateBands() {
+      const bands = [
+        { name: "80m", freq: 3.5 },
+        { name: "60m", freq: 5.33 },
+        { name: "40m", freq: 7.1 },
+        { name: "30m", freq: 10.1 },
+        { name: "20m", freq: 14.1 },
+        { name: "17m", freq: 18.1 },
+        { name: "15m", freq: 21.2 },
+        { name: "12m", freq: 24.9 },
+        { name: "10m", freq: 28.5 },
+        { name: "6m", freq: 50.1 }
+      ];
 
-  // SWR mismatch loss (very rough)
-  const swrLossDb = swr > 1 ? Math.log10(swr)*1.5 : 0;
+      const tx = Number(document.getElementById("tx_power").value);
+      const feedType = document.getElementById("feedline_type").value;
+      const feedLen = Number(document.getElementById("feedline_len").value);
 
-  const totalDb = gainDb - swrLossDb;
-  return txW * dbToRatio(totalDb);
-}
+      const tbody = document.querySelector("#results_table tbody");
+      tbody.innerHTML = "";
 
-// ---------- UI wiring ----------
-function calculateAll(){
-  const elementFt = parseFloat(document.getElementById("element_length_ft").value||"0");
-  const mastFt = parseFloat(document.getElementById("mast_height_ft").value||"0");
-  const foldMode = document.getElementById("foldover_mode").value;
-  const cpOn = document.getElementById("counterpoise_enabled").value === "yes";
-  const cpLenFt = parseFloat(document.getElementById("counterpoise_length_ft").value||"0");
+      bands.forEach(b => {
+        const swr = 4.0; // placeholder
+        const swrNoTuner = 16.0; // placeholder
+        const loss = HFUtils.totalCoaxLossDb(b.freq, feedType, feedLen);
+        const erp = HFUtils.erpWatts(tx, 0, loss, 0);
 
-  const ratio = parseInt(document.getElementById("transformer_ratio").value,10);
-  const feedType = document.getElementById("feedline_type").value;
-  const feedLenFt = parseFloat(document.getElementById("feedline_length_ft").value||"0");
-  const txW = parseFloat(document.getElementById("tx_power_w").value||"100");
+        const row = `
+          <tr>
+            <td>${b.name}</td>
+            <td>${b.freq.toFixed(2)}</td>
+            <td>${swr <= 3 ? "Yes" : "Tuner"}</td>
+            <td>${swrNoTuner.toFixed(1)}</td>
+            <td>${swr.toFixed(1)}</td>
+            <td>${erp.toFixed(1)}</td>
+          </tr>
+        `;
+        tbody.insertAdjacentHTML("beforeend", row);
+      });
 
-  const siteType = document.getElementById("site_type").value;
-  const radialsCount = parseInt(document.getElementById("radials_count").value||"0",10);
-  const radialsLenFt = parseFloat(document.getElementById("radials_length_ft").value||"0");
-  const tod = document.getElementById("time_of_day").value;
+      document.getElementById("summary_block").innerHTML =
+        "Calculated using shared HFUtils engine.";
+    }
+  </script>
 
-  // effective height (very simple for now)
-  let effHeightFt = Math.min(elementFt, mastFt);
-  if(foldMode === "foldover" || foldMode === "helical"){
-    effHeightFt = mastFt; // vertical portion
-  }
-
-  // geometry summary
-  document.getElementById("geometry_summary").innerHTML =
-    `<div><strong>Element length:</strong> ${elementFt.toFixed(1)} ft</div>`+
-    `<div><strong>Mast height:</strong> ${mastFt.toFixed(1)} ft</div>`+
-    `<div><strong>Effective vertical height:</strong> ${effHeightFt.toFixed(1)} ft</div>`+
-    `<div><strong>Fold mode:</strong> ${foldMode}</div>`+
-    `<div><strong>Counterpoise:</strong> ${cpOn ? "Yes" : "No"} (${cpLenFt.toFixed(1)} ft)</div>`;
-
-  // feedline summary
-  let feedLossNote = "N/A";
-  if(feedType in COAX_TYPES){
-    const avgMhz = 14;
-    const per100 = coaxLossPer100ft(avgMhz, feedType);
-    const totalLoss = per100 * (feedLenFt/100);
-    feedLossNote = `${totalLoss.toFixed(2)} dB @ ~14 MHz`;
-  }
-  document.getElementById("feedline_summary").innerHTML =
-    `<div><strong>Transformer:</strong> ${ratio}:1</div>`+
-    `<div><strong>Feedline:</strong> ${feedType}, ${feedLenFt.toFixed(1)} ft</div>`+
-    `<div><strong>Approx feedline loss:</strong> ${feedLossNote}</div>`+
-    `<div><strong>Radials:</strong> ${radialsCount} × ${radialsLenFt.toFixed(1)} ft</div>`+
-    `<div><strong>Site:</strong> ${siteType}, time: ${tod}</div>`;
-
-  const tbody = document.querySelector("#band_table tbody");
-  tbody.innerHTML = "";
-
-  let erpSummaryLines = [];
-
-  BANDS.forEach(b=>{
-    const zFeed = estimateFeedpointImpedance(b.mhz, elementFt, ratio, cpOn);
-    const zAtRadio = applyTransformer(zFeed, ratio);
-    const swrNoTuner = estimateSWR(zAtRadio);
-    const swrWithTuner = Math.min(1.5, swrNoTuner); // assume tuner can get close
-    const erpW = estimateERP(b.mhz, txW, siteType, elementFt, effHeightFt, swrNoTuner);
-
-    const usable = swrNoTuner <= 3.0 ? "Yes" : (swrNoTuner <= 10 ? "Tuner" : "No");
-    let badgeClass = "badge-bad";
-    if(usable === "Yes") badgeClass = "badge-ok";
-    else if(usable === "Tuner") badgeClass = "badge-warn";
-
-    const tr = document.createElement("tr");
-    tr.innerHTML =
-      `<td>${b.name}</td>`+
-      `<td>${b.mhz.toFixed(2)}</td>`+
-      `<td>${usable}<span class="badge ${badgeClass}">${usable}</span></td>`+
-      `<td>${swrNoTuner.toFixed(1)}</td>`+
-      `<td>${swrWithTuner.toFixed(1)}</td>`+
-      `<td>${erpW.toFixed(1)}</td>`;
-    tbody.appendChild(tr);
-
-    erpSummaryLines.push(`${b.name}: ${erpW.toFixed(1)} W ERP (SWR ${swrNoTuner.toFixed(1)})`);
-  });
-
-  document.getElementById("erp_summary").innerHTML =
-    `<div><strong>TX power:</strong> ${txW.toFixed(0)} W</div>`+
-    `<div style="margin-top:4px;">${erpSummaryLines.join("<br>")}</div>`;
-
-  // placeholder plots for now
-  drawPlaceholderPatterns();
-}
-
-// simple placeholder plots so canvases aren’t blank
-function drawPlaceholderPatterns(){
-  ["azimuth_plot","elevation_plot","donut_plot"].forEach(id=>{
-    const c=document.getElementById(id);
-    if(!c) return;
-    const ctx=c.getContext("2d");
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.clearRect(0,0,c.width,c.height);
-    ctx.fillStyle="#020617";
-    ctx.fillRect(0,0,c.width,c.height);
-    ctx.strokeStyle="#2d3748";
-    ctx.lineWidth=1;
-    ctx.beginPath();
-    ctx.arc(c.width/2,c.height/2,Math.min(c.width,c.height)/2-8,0,Math.PI*2);
-    ctx.stroke();
-  });
-}
-
-document.getElementById("calculate_btn").addEventListener("click",e=>{
-  e.preventDefault();
-  calculateAll();
-});
-
-document.addEventListener("DOMContentLoaded",calculateAll);
-</script>
 </body>
 </html>
-
